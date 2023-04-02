@@ -1,0 +1,6 @@
+.game-board {
+  display: grid;
+  width: 500px;
+  grid-template-columns: 50px 50px 50px;
+  grid-template-rows: 50px 50px 50px;
+}
