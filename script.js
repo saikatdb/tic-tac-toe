@@ -3,28 +3,30 @@ const gameBoard = (() => {
   const cells = document.getElementsByClassName('cell');
 
   const printBoard = () => {
-    for (let i = 0; i < cells.length; i++) {
+    for (let i = 0; i < cells.length; i += 1) {
       cells[i].textContent = board[i];
     }
   };
 
-  return { printBoard };
+  return { board, printBoard };
 })();
 
 gameBoard.printBoard();
 
-const players = (name) => {
-  let playerMark = '';
-  const chooseMark = (choice) => {
-    if (choice === 'x') {
-      playerMark = 'X';
-      // return playerMark;
-    } else if (choice === 'o') {
-      playerMark = 'O';
-      // return playerMark;
-    }
-    return playerMark;
+const players = (name, mark) => {
+  const cellsNode = document.querySelectorAll('.cell');
+
+  const addMark = () => {
+    cellsNode.forEach((cell) => {
+      cell.addEventListener('click', () => {
+        cell.textContent = mark;
+        gameBoard.board.splice(cell.dataset.index, 1, mark);
+      });
+    });
   };
 
-  return { name, chooseMark };
+  return { name, mark, addMark };
 };
+
+const player1 = players('player 1', 'X');
+const player2 = players('player 2', 'O');
