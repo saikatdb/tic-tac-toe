@@ -28,5 +28,9 @@ const players = (name, mark) => {
   return { name, mark, addMark };
 };
 
-const player1 = players('player 1', 'X');
-const player2 = players('player 2', 'O');
+const playerOne = players('Player 1', 'X');
+const playerTwo = players('Player 2', 'O');
+
+// const displayController = (() = {
+
+// })
