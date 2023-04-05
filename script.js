@@ -31,12 +31,13 @@ const displayController = (() => {
   divPlayerTurn.setAttribute('class', 'turn');
 
   // playerMark to change mark after each turn
-  let playerMark = playerOne.getMark();
+  // const playerMark = playerOne.getMark();
 
   // playerTurn to change player name after turn
-  let playerTurn = playerOne.getName();
+  // const playerTurn = playerOne.getName();
 
-  //
+  // to restart the game
+  // const restart = false;
 
   // to stop the round
   const cancelled = false;
@@ -44,10 +45,10 @@ const displayController = (() => {
   const round = () => {
     const cellsNode = document.querySelectorAll('.cell');
 
-    let roundNum = 0;
+    // const roundNum = 0;
 
     // to show player name on ui
-    divPlayerTurn.textContent = `${playerTurn}'s turn`;
+    divPlayerTurn.textContent = `${gameController.playerTurn}'s turn`;
     container.insertBefore(divPlayerTurn, boardNode);
 
     cellsNode.forEach((cell) => {
@@ -59,31 +60,35 @@ const displayController = (() => {
             return;
           }
 
-          gameBoard.board.splice(cell.dataset.index, 1, playerMark);
+          gameBoard.board.splice(
+            cell.dataset.index,
+            1,
+            gameController.playerMark
+          );
           gameBoard.printBoard();
           gameController.winCon();
-          roundNum += 1;
-          console.log(roundNum);
+          gameController.roundNum += 1;
+          console.log(gameController.roundNum);
 
           // change mark after each turn
-          playerMark =
-            playerMark === playerOne.getMark()
+          gameController.playerMark =
+            gameController.playerMark === playerOne.getMark()
               ? playerTwo.getMark()
               : playerOne.getMark();
 
           // change name after each turn
-          playerTurn =
-            playerTurn === playerOne.getName()
+          gameController.playerTurn =
+            gameController.playerTurn === playerOne.getName()
               ? playerTwo.getName()
               : playerOne.getName();
-          console.log(playerTurn);
+          console.log(gameController.playerTurn);
 
           // change name in the ui
-          divPlayerTurn.textContent = `${playerTurn}'s turn`;
+          divPlayerTurn.textContent = `${gameController.playerTurn}'s turn`;
           container.insertBefore(divPlayerTurn, boardNode);
 
           // to execute if draws
-          if (roundNum === 9) {
+          if (gameController.roundNum === 9) {
             container.removeChild(divPlayerTurn);
             divPlayerTurn.textContent = `It's a draw!`;
             container.insertBefore(divPlayerTurn, boardNode);
@@ -93,13 +98,11 @@ const displayController = (() => {
             container.removeChild(divPlayerTurn);
           }
         }
-        // else {
-        // }
       });
     });
   };
 
-  return { round, cancelled };
+  return { round, cancelled, divPlayerTurn };
 })();
 
 const gameController = (() => {
@@ -148,8 +151,40 @@ const gameController = (() => {
       }
     }
   };
+  const playerMark = playerOne.getMark();
+  const playerTurn = playerOne.getName();
 
-  return { winCon };
+  const roundNum = 0;
+
+  const restart = document.querySelector('.restart');
+  const restartGame = () => {
+    displayController.round();
+    restart.addEventListener('click', () => {
+      const cells = document.getElementsByClassName('cell');
+      for (let i = 0; i < cells.length; i += 1) {
+        gameBoard.board.splice(i, 1, '');
+        gameBoard.printBoard();
+      }
+      gameController.roundNum = 0;
+      gameController.playerMark = playerOne.getMark();
+      gameController.playerTurn = playerOne.getName();
+
+      displayController.cancelled = false;
+
+      const divPlayerTurn = document.querySelector('.turn');
+      if (divPlayerTurn) {
+        container.removeChild(divPlayerTurn);
+      } else if (divPlayerWins) {
+        container.removeChild(divPlayerWins);
+      }
+
+      displayController.divPlayerTurn.textContent = `${gameController.playerTurn}'s turn`;
+      container.insertBefore(displayController.divPlayerTurn, boardNode);
+    });
+  };
+
+  return { winCon, restartGame, playerMark, playerTurn, roundNum };
 })();
 
-displayController.round();
+// displayController.round();
+gameController.restartGame();
