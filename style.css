@@ -1,6 +1,74 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: rgb(160, 82, 82);
+}
+
 .game-board {
   display: grid;
   width: 500px;
-  grid-template-columns: 50px 50px 50px;
-  grid-template-rows: 50px 50px 50px;
+  grid-template-columns: 100px 100px 100px;
+  grid-template-rows: 100px 100px 100px;
+  justify-content: center;
+  gap: 3px;
+}
+.cell {
+  border: 2px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5rem;
+  background-color: brown;
+  cursor: pointer;
+}
+
+.cell:hover {
+  background-color: rgb(146, 35, 35);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.header {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 3.5rem;
+  margin: 5px;
+}
+
+.turn {
+  font-size: 1.5rem;
+  margin: 5px;
+}
+
+.wins {
+  font-size: 1.7rem;
+  margin: 5px;
+}
+
+button {
+  font-family: inherit;
+  font-weight: 600px;
+  font-size: 1.2rem;
+  padding: 5px;
+  margin: 5px;
+  text-align: center;
+  border: 2px black solid;
+  border-radius: 3px;
+  background-color: rgba(112, 23, 23, 0.466);
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: rgba(112, 23, 23, 0.712);
 }
