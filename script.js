@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 const gameBoard = (() => {
   const board = ['', '', '', '', '', '', '', '', ''];
   const cells = document.getElementsByClassName('cell');
@@ -22,88 +23,6 @@ const players = (name, mark) => {
 
 const playerOne = players('Player 1', 'X');
 const playerTwo = players('Player 2', 'O');
-
-// To display the game
-const displayController = (() => {
-  const container = document.querySelector('.container');
-  const boardNode = document.querySelector('.game-board');
-  const divPlayerTurn = document.createElement('div');
-  divPlayerTurn.setAttribute('class', 'turn');
-
-  // playerMark to change mark after each turn
-  // const playerMark = playerOne.getMark();
-
-  // playerTurn to change player name after turn
-  // const playerTurn = playerOne.getName();
-
-  // to restart the game
-  // const restart = false;
-
-  // to stop the round
-  const cancelled = false;
-
-  const round = () => {
-    const cellsNode = document.querySelectorAll('.cell');
-
-    // const roundNum = 0;
-
-    // to show player name on ui
-    divPlayerTurn.textContent = `${gameController.playerTurn}'s turn`;
-    container.insertBefore(divPlayerTurn, boardNode);
-
-    cellsNode.forEach((cell) => {
-      cell.addEventListener('click', () => {
-        // '!cell.childNodes.length' will see if the cell is empty or not
-        if (!cell.childNodes.length) {
-          // To stop round from happening in win/lose
-          if (displayController.cancelled === true) {
-            return;
-          }
-
-          gameBoard.board.splice(
-            cell.dataset.index,
-            1,
-            gameController.playerMark
-          );
-          gameBoard.printBoard();
-          gameController.winCon();
-          gameController.roundNum += 1;
-          console.log(gameController.roundNum);
-
-          // change mark after each turn
-          gameController.playerMark =
-            gameController.playerMark === playerOne.getMark()
-              ? playerTwo.getMark()
-              : playerOne.getMark();
-
-          // change name after each turn
-          gameController.playerTurn =
-            gameController.playerTurn === playerOne.getName()
-              ? playerTwo.getName()
-              : playerOne.getName();
-          console.log(gameController.playerTurn);
-
-          // change name in the ui
-          divPlayerTurn.textContent = `${gameController.playerTurn}'s turn`;
-          container.insertBefore(divPlayerTurn, boardNode);
-
-          // to execute if draws
-          if (gameController.roundNum === 9) {
-            container.removeChild(divPlayerTurn);
-            divPlayerTurn.textContent = `It's a draw!`;
-            container.insertBefore(divPlayerTurn, boardNode);
-          }
-
-          if (displayController.cancelled === true) {
-            container.removeChild(divPlayerTurn);
-          }
-        }
-      });
-    });
-  };
-
-  return { round, cancelled, divPlayerTurn };
-})();
 
 const gameController = (() => {
   const container = document.querySelector('.container');
@@ -131,19 +50,17 @@ const gameController = (() => {
         winX[j] = gameBoard.board[winArray[i][j]].includes('X');
         winO[j] = gameBoard.board[winArray[i][j]].includes('O');
       }
-      // console.log(winX);
+
       const winnerX = winX.every(checkTrue);
       const winnerO = winO.every(checkTrue);
 
       if (winnerX) {
-        console.log('hey');
         displayController.cancelled = true;
 
         divPlayerWins.textContent = `Congratulation! ${playerOne.getName()} has won!`;
         container.insertBefore(divPlayerWins, boardNode);
       }
       if (winnerO) {
-        console.log('hey');
         displayController.cancelled = true;
 
         divPlayerWins.textContent = `Congratulation! ${playerTwo.getName()} has won!`;
@@ -184,6 +101,77 @@ const gameController = (() => {
   };
 
   return { winCon, restartGame, playerMark, playerTurn, roundNum };
+})();
+
+// To display the game
+const displayController = (() => {
+  const container = document.querySelector('.container');
+  const boardNode = document.querySelector('.game-board');
+  const divPlayerTurn = document.createElement('div');
+  divPlayerTurn.setAttribute('class', 'turn');
+
+  // to stop the round
+  const cancelled = false;
+
+  const round = () => {
+    const cellsNode = document.querySelectorAll('.cell');
+
+    // const roundNum = 0;
+
+    // to show player name on ui
+    divPlayerTurn.textContent = `${gameController.playerTurn}'s turn`;
+    container.insertBefore(divPlayerTurn, boardNode);
+
+    cellsNode.forEach((cell) => {
+      cell.addEventListener('click', () => {
+        // '!cell.childNodes.length' will see if the cell is empty or not
+        if (!cell.childNodes.length) {
+          // To stop round from happening in win/lose
+          if (displayController.cancelled === true) {
+            return;
+          }
+
+          gameBoard.board.splice(
+            cell.dataset.index,
+            1,
+            gameController.playerMark
+          );
+          gameBoard.printBoard();
+          gameController.winCon();
+          gameController.roundNum += 1;
+
+          // change mark after each turn
+          gameController.playerMark =
+            gameController.playerMark === playerOne.getMark()
+              ? playerTwo.getMark()
+              : playerOne.getMark();
+
+          // change name after each turn
+          gameController.playerTurn =
+            gameController.playerTurn === playerOne.getName()
+              ? playerTwo.getName()
+              : playerOne.getName();
+
+          // change name in the ui
+          divPlayerTurn.textContent = `${gameController.playerTurn}'s turn`;
+          container.insertBefore(divPlayerTurn, boardNode);
+
+          // to execute if draws
+          if (gameController.roundNum === 9) {
+            container.removeChild(divPlayerTurn);
+            divPlayerTurn.textContent = `It's a draw!`;
+            container.insertBefore(divPlayerTurn, boardNode);
+          }
+
+          if (displayController.cancelled === true) {
+            container.removeChild(divPlayerTurn);
+          }
+        }
+      });
+    });
+  };
+
+  return { round, cancelled, divPlayerTurn };
 })();
 
 // displayController.round();
